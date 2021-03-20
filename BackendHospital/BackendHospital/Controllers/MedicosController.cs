@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BackendHospital.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -11,13 +12,14 @@ namespace BackendHospital.Controllers
         // GET: Medicos
         public ActionResult Index()
         {
-            return View();
-        }
+            List<Medico> medicos;
+            
+            using (HospitalesRHEntities ctx = new HospitalesRHEntities())
+            {
+                medicos = ctx.Medico.ToList();
+            }
 
-        // GET: Medicos/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
+            return View(medicos);
         }
 
         // GET: Medicos/Create
@@ -28,17 +30,21 @@ namespace BackendHospital.Controllers
 
         // POST: Medicos/Create
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        public ActionResult Create(Medico oMedico)
         {
             try
             {
-                // TODO: Add insert logic here
+                using (HospitalesRHEntities ctx = new HospitalesRHEntities())
+                {
+                    ctx.Medico.Add(oMedico);
+                    ctx.SaveChanges();
+                }
 
                 return RedirectToAction("Index");
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                return View(oMedico);
             }
         }
 

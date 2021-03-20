@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="HospitalesRHModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Especialidad">
+    <Key>
+      <PropertyRef Name="Id_Especialidad" />
+    </Key>
+    <Property Name="Id_Especialidad" Type="Int32" Nullable="false" />
+    <Property Name="Nombre" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Id_medico" Type="Int32" />
+    <NavigationProperty Name="Medico" Relationship="Self.FK_Especialidad_Medico" FromRole="Especialidad" ToRole="Medico" />
+  </EntityType>
+  <EntityType Name="Medico">
+    <Key>
+      <PropertyRef Name="Id_Medico" />
+    </Key>
+    <Property Name="Id_Medico" Type="Int32" Nullable="false" />
+    <Property Name="Nombre" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Apellido" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Id_Especialidad" Type="Int32" Nullable="false" />
+    <Property Name="Id_Sedes" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Especialidad" Relationship="Self.FK_Especialidad_Medico" FromRole="Medico" ToRole="Especialidad" />
+    <NavigationProperty Name="Sedes" Relationship="Self.FK_Sedes_Medico" FromRole="Medico" ToRole="Sedes" />
+  </EntityType>
+  <EntityType Name="Sedes">
+    <Key>
+      <PropertyRef Name="Id_Sedes" />
+    </Key>
+    <Property Name="Id_Sedes" Type="Int32" Nullable="false" />
+    <Property Name="Nombre_Sede" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Id_medico" Type="Int32" />
+    <NavigationProperty Name="Medico" Relationship="Self.FK_Sedes_Medico" FromRole="Sedes" ToRole="Medico" />
+  </EntityType>
+  <Association Name="FK_Especialidad_Medico">
+    <End Role="Medico" Type="Self.Medico" Multiplicity="0..1" />
+    <End Role="Especialidad" Type="Self.Especialidad" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Medico">
+        <PropertyRef Name="Id_Medico" />
+      </Principal>
+      <Dependent Role="Especialidad">
+        <PropertyRef Name="Id_medico" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Sedes_Medico">
+    <End Role="Medico" Type="Self.Medico" Multiplicity="0..1" />
+    <End Role="Sedes" Type="Self.Sedes" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Medico">
+        <PropertyRef Name="Id_Medico" />
+      </Principal>
+      <Dependent Role="Sedes">
+        <PropertyRef Name="Id_medico" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="HospitalesRHEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Especialidad" EntityType="Self.Especialidad" />
+    <EntitySet Name="Medico" EntityType="Self.Medico" />
+    <EntitySet Name="Sedes" EntityType="Self.Sedes" />
+    <AssociationSet Name="FK_Especialidad_Medico" Association="Self.FK_Especialidad_Medico">
+      <End Role="Medico" EntitySet="Medico" />
+      <End Role="Especialidad" EntitySet="Especialidad" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Sedes_Medico" Association="Self.FK_Sedes_Medico">
+      <End Role="Medico" EntitySet="Medico" />
+      <End Role="Sedes" EntitySet="Sedes" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
